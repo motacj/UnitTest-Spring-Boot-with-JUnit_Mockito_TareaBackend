@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Prueba JWT</title>
+</head>
+<body>
+
+<h2>Prueba API protegida con JWT</h2>
+
+<input type="text" id="tokenInput" placeholder="Pega aquí tu token" style="width:500px;">
+<br><br>
+<button onclick="callApi()">Probar API</button>
+
+<pre id="resultado"></pre>
+
+<script>
+    function callApi() {
+
+        const token = document.getElementById("tokenInput").value;
+
+        fetch("http://localhost:8080/api/test", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("resultado").textContent = data;
+            })
+            .catch(error => {
+                document.getElementById("resultado").textContent = "Error: " + error;
+            });
+    }
+</script>
+
+</body>
+</html>
