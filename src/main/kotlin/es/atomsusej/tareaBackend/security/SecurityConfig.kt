@@ -31,7 +31,8 @@ class SecurityConfig(
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) } // sin sesiones
             .authorizeHttpRequests { auth ->
             auth.requestMatchers("/auth/**").permitAll()
-            auth.requestMatchers("/api/v1/**", "/api/v2/**", "/api/v3/**").authenticated()
+            //auth.requestMatchers("/api/v1/**", "/api/v2/**", "/api/v3/**").authenticated()
+                auth.requestMatchers("/api/v1/**", "/api/v2/**", "/api/v3/**").permitAll()
             auth.anyRequest().permitAll()
         }
             // OJO: este filtro va ANTES del filtro de usuario/contraseña de Spring

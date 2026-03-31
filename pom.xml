@@ -7,11 +7,11 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- Spring Boot -->
+    <!-- He cambiado la versión de Spring Boot para intentar quitar varios avisos de seguridad -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.5</version>
+        <version>3.5.13</version>
         <relativePath/>
     </parent>
 
@@ -21,123 +21,166 @@
     <name>tareaBackend</name>
     <description>Backend Spring Boot con Kotlin</description>
 
-    <!-- Propiedades -->
+    <!-- Aquí pongo las versiones generales que usa el proyecto -->
     <properties>
+        <!-- He dejado Java 21 porque es la versión que estoy usando -->
         <java.version>21</java.version>
-        <kotlin.version>1.9.23</kotlin.version>
+
+        <!-- He subido Kotlin para que no me salga el aviso de la versión en el IDE -->
+        <kotlin.version>2.3.20</kotlin.version>
+
+        <!-- Estas versiones las he puesto para intentar corregir librerías con warnings -->
+        <jackson.version>2.21.1</jackson.version>
+        <assertj.version>3.27.7</assertj.version>
+        <xmlunit.version>2.11.0</xmlunit.version>
+        <json-smart.version>2.6.0</json-smart.version>
     </properties>
 
-    <!-- Dependencias -->
+    <!-- Aquí fuerzo algunas versiones para que Maven no coja otras más antiguas -->
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- He añadido este BOM para controlar mejor la versión de Jackson -->
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Esta la fuerzo porque me salía aviso en el escáner -->
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${assertj.version}</version>
+            </dependency>
+
+            <!-- También la he actualizado por seguridad -->
+            <dependency>
+                <groupId>org.xmlunit</groupId>
+                <artifactId>xmlunit-core</artifactId>
+                <version>${xmlunit.version}</version>
+            </dependency>
+
+            <!-- Esta la he cambiado porque la versión anterior daba warning -->
+            <dependency>
+                <groupId>net.minidev</groupId>
+                <artifactId>json-smart</artifactId>
+                <version>${json-smart.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- Dependencias del proyecto -->
     <dependencies>
 
         <!-- SECURITY -->
-        <!-- Necesarias para controlar el acceso al logearse -->
+        <!-- La uso para controlar el acceso cuando el usuario inicia sesión -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        <!-- SON LAS TRES PARA TRABAJAR CON JSONWEBTOKKEN -->
-        <!-- Source: https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api -->
-        <!-- Necesarias para controlar el acceso al logearse -->
+
+        <!-- JWT -->
+        <!-- Estas dependencias las uso para trabajar con tokens JWT -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
             <version>0.13.0</version>
-            <scope>compile</scope>
         </dependency>
-        <!-- Source: https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl -->
-        <!-- Necesarias para controlar el acceso al logearse -->
+
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
             <version>0.13.0</version>
             <scope>runtime</scope>
         </dependency>
-        <!-- Source: https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson -->
-        <!-- Necesarias para controlar el acceso al logearse -->
+
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
             <version>0.13.0</version>
             <scope>runtime</scope>
         </dependency>
+
         <!-- REST -->
+        <!-- Esta dependencia la uso para crear API REST -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <!-- JPA -->
+        <!-- Esta me sirve para trabajar con la base de datos usando JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
         <!-- Kotlin -->
+        <!-- Esta me ayuda a trabajar JSON con Kotlin -->
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-kotlin</artifactId>
         </dependency>
 
+        <!-- Esta la necesito para reflexión en Kotlin -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-reflect</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-        </dependency>
+        <!-- He quitado kotlin-stdlib porque en principio ya no hace falta ponerla aparte -->
 
-        <!-- Bases de datos
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
-        </dependency>-->
-
+        <!-- Base de datos -->
+        <!-- Esta es la dependencia del conector de MySQL -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Tests -->
-        <!-- Nos permite hacer la preubas de integración para comprobar errores -->
+        <!-- TESTS -->
+        <!-- Esta la uso para hacer pruebas en el proyecto -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
+        <!-- He quitado junit-jupiter-engine porque Spring Boot ya gestiona los test -->
+
     </dependencies>
 
-    <!-- Build -->
+    <!-- Configuración de compilación -->
     <build>
 
+        <!-- Aquí digo dónde están mis archivos Kotlin principales -->
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+
+        <!-- Aquí digo dónde están mis test en Kotlin -->
         <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
 
         <plugins>
 
-            <!-- Spring Boot -->
+            <!-- Plugin de Spring Boot -->
+            <!-- Lo uso para empaquetar la aplicación -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            <configuration>
-              <executable>true</executable>
-              <finalName>tareaBackend</finalName>
-            </configuration>
-        </plugin>
+                <configuration>
+                    <!-- Lo dejo ejecutable -->
+                    <executable>true</executable>
 
-        <!-- Kotlin -->
+                    <!-- Aquí pongo el nombre final del jar -->
+                    <finalName>tareaBackend</finalName>
+                </configuration>
+            </plugin>
+
+            <!-- Plugin de Kotlin -->
+            <!-- Este plugin compila los archivos Kotlin -->
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
@@ -158,12 +201,17 @@
                         </goals>
                     </execution>
                 </executions>
+
                 <configuration>
+                    <!-- Aquí indico que compilo para Java 21 -->
                     <jvmTarget>21</jvmTarget>
+
+                    <!-- Este plugin lo uso para que Kotlin funcione mejor con Spring -->
                     <compilerPlugins>
                         <plugin>spring</plugin>
                     </compilerPlugins>
                 </configuration>
+
                 <dependencies>
                     <dependency>
                         <groupId>org.jetbrains.kotlin</groupId>
@@ -172,14 +220,18 @@
                     </dependency>
                 </dependencies>
             </plugin>
+
+            <!-- Plugin del compilador de Maven -->
+            <!-- Este lo uso para indicar que el proyecto va con Java 21 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>3.14.1</version>
                 <configuration>
                     <release>21</release>
                 </configuration>
             </plugin>
+
         </plugins>
 
     </build>
