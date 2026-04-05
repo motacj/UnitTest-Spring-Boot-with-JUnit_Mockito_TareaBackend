@@ -18,9 +18,7 @@ class JwtService(
 
     private val key = Keys.hmacShaKeyFor(secret.toByteArray(StandardCharsets.UTF_8))
 
-    // =========================
-    // GENERAR TOKEN
-    // =========================
+    // Genro un tokken
     fun generateToken(user: UserDetails): String {
 
         val now = Instant.now()
@@ -37,16 +35,12 @@ class JwtService(
             .compact()
     }
 
-    // =========================
-    // EXTRAER USERNAME
-    // =========================
+    // Saca un usuario
     fun extractUsername(token: String): String {
         return extractAllClaims(token).subject
     }
 
-    // =========================
-    // EXTRAER ROLES
-    // =========================
+    // Saca un rol
     fun extractRoles(token: String): List<String> {
         val claims = extractAllClaims(token)
         val roles = claims["roles"] ?: return emptyList()
@@ -59,22 +53,19 @@ class JwtService(
         }
     }
 
-    // =========================
-    // VALIDAR TOKEN
-    // =========================
+    // Da el ok al tokken
     fun isTokenValid(token: String, user: UserDetails): Boolean {
+        return try {
+            val claims = extractAllClaims(token)
+            val username = claims.subject
+            val expired = claims.expiration.before(Date())
 
-        val claims = extractAllClaims(token)
-
-        val username = claims.subject
-        val expired = claims.expiration.before(Date())
-
-        return username == user.username && !expired
+            username == user.username && !expired
+        } catch (e: Exception) {
+            false
+        }
     }
 
-    // =========================
-    // MÉTODO INTERNO PARA PARSEAR CLAIMS
-    // =========================
     private fun extractAllClaims(token: String): Claims {
         return Jwts.parser()
             .verifyWith(key)

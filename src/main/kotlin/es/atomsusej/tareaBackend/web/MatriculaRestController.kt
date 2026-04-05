@@ -88,13 +88,13 @@ open class MatriculaRestController {
         }
     }
 
-    @DeleteMapping("/{id_alumno}/{id_asignatura}")
+    @DeleteMapping("/{id_asignatura}/{id_alumno}")
     open fun delete(
         @PathVariable("id_alumno") idAlumno: Int,
         @PathVariable("id_asignatura") idAsignatura: Int
     ): ResponseEntity<Any> {
         return try {
-            matriculaBusisness!!.remove(idAlumno, idAsignatura)
+            matriculaBusisness!!.remove(idAsignatura, idAlumno)
             ResponseEntity(HttpStatus.OK)
         } catch (e: BusinessException) {
             ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)

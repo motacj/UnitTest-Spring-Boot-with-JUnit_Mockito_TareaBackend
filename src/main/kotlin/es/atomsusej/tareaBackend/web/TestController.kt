@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.RestController
 class TestController {
 
     @GetMapping
-    fun secure(@AuthenticationPrincipal user: UserDetails): String {
-        return "Entraste con JWT. Usuario: ${user.username}"
+    fun secure(@AuthenticationPrincipal user: UserDetails?): String {
+        return if (user != null) {
+            "Entraste con JWT. Usuario: ${user.username}"
+        } else {
+            "Usuario no autenticado"
+        }
     }
 }

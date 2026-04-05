@@ -4,6 +4,8 @@ package es.atomsusej.tareaBackend.web
 import es.atomsusej.tareaBackend.security.AuthResponse
 import es.atomsusej.tareaBackend.security.AuthResquest
 import es.atomsusej.tareaBackend.security.JwtService
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -18,20 +20,18 @@ class AuthController(
 ) {
 
     @PostMapping("/login")
-    fun login(@RequestBody req: AuthResquest): AuthResponse {
+    fun login(@RequestBody req: AuthResquest): ResponseEntity<Any> {
+        return try {
+            authManager.authenticate(
+                UsernamePasswordAuthenticationToken(req.username, req.password)
+            )
 
-        // 1) Spring comprueba usuario/contraseña (contra UserDetailsService)
-        authManager.authenticate(
-            UsernamePasswordAuthenticationToken(req.username, req.password)
-        )
+            val user = userDetailsService.loadUserByUsername(req.username)
+            val token = jwtService.generateToken(user)
 
-        // 2) Si llega aquí: login correcto. Cargo el usuario.
-        val user = userDetailsService.loadUserByUsername(req.username)
-
-        // 3) Creo token JWT
-        val token = jwtService.generateToken(user)
-
-        // 4) Devuelvo token al cliente
-        return AuthResponse(token)
+            ResponseEntity.ok(AuthResponse(token))
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales incorrectas")
+        }
     }
 }

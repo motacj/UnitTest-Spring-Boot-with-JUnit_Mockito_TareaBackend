@@ -5,7 +5,7 @@ import java.io.Serializable
 
 //Indica que esta clase se pued usar como clave
 @Embeddable
-class MatriculaId(
+data class MatriculaId(
     var id_asignatura: Int = 0,
     var id_alumno: Int = 0
 ) : Serializable
