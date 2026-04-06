@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: es.atomsusej.tareaBackend.integration.controller.MatriculaRestControllerIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.754 s -- in es.atomsusej.tareaBackend.integration.controller.MatriculaRestControllerIntegrationTest

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: es.atomsusej.tareaBackend.external.mocks.ExternalValidationServiceTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.597 s -- in es.atomsusej.tareaBackend.external.mocks.ExternalValidationServiceTest

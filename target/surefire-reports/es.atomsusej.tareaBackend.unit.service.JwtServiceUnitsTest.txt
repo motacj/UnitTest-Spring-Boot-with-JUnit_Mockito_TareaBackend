@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: es.atomsusej.tareaBackend.unit.service.JwtServiceUnitsTest
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.414 s -- in es.atomsusej.tareaBackend.unit.service.JwtServiceUnitsTest
