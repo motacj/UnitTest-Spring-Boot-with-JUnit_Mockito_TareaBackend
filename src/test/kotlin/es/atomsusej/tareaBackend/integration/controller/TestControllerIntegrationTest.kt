@@ -1,8 +1,6 @@
 package es.atomsusej.tareaBackend.integration.controller
 
-import jakarta.servlet.ServletException
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.assertTrue
+
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -31,11 +29,9 @@ class TestControllerIntegrationTest {
     }
 
     @Test
-    fun secure_sin_autenticar_lanza_excepcion() {
-        val exception = assertThrows(ServletException::class.java) {
-            mockMvc.perform(get("/api/test"))
-        }
-
-        assertTrue(exception.cause is NullPointerException)
+    fun secure_sin_autenticar_devuelve_mensaje() {
+        mockMvc.perform(get("/api/test"))
+            .andExpect(status().isOk)
+            .andExpect(content().string("Usuario no autenticado"))
     }
 }

@@ -2,18 +2,15 @@ package es.atomsusej.tareaBackend.integration.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import es.atomsusej.tareaBackend.security.AuthResquest
-import jakarta.servlet.ServletException
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
-import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -76,23 +73,18 @@ class AuthControllerIntegrationTest {
     }
 
     @Test
-    fun login_incorrecto_lanza_excepcion() {
-        // Aquí preparo un login inválido
+    fun login_incorrecto_devuelve_401() {
         val loginRequest = AuthResquest(
             username = "admin",
             password = "mal"
         )
 
-        // Aquí compruebo que el controlador lanza una excepción
-        val exception = assertThrows(ServletException::class.java) {
-            mockMvc.perform(
-                post("/auth/login")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(loginRequest))
-            )
-        }
-
-        // Aquí compruebo que la causa real es BadCredentialsException
-        assertTrue(exception.cause is BadCredentialsException)
+        mockMvc.perform(
+            post("/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginRequest))
+        )
+            .andExpect(status().isUnauthorized)
+            .andExpect(content().string("Credenciales incorrectas"))
     }
 }

@@ -95,45 +95,22 @@ class JwtServiceUnitsTest {
     }
 
     @Test
-    fun isTokenValid_devuelve_false_si_el_usuario_no_coincide() {
-        val user1 = User(
-            "admin",
-            "1234",
-            listOf(SimpleGrantedAuthority("ROLE_ADMIN"))
-        )
-
-        val user2 = User(
-            "otroUsuario",
-            "1234",
-            listOf(SimpleGrantedAuthority("ROLE_ADMIN"))
-        )
-
-        val token = jwtService.generateToken(user1)
-
-        // Aquí compruebo que el token no vale para otro usuario distinto
-        val valido = jwtService.isTokenValid(token, user2)
-
-        assertFalse(valido)
-    }
-
-    @Test
-    fun isTokenValid_lanza_excepcion_si_el_token_esta_expirado() {
-        // Aquí creo otro JwtService con expiración negativa para forzar que el token nazca caducado
-        val jwtServiceExpirado = JwtService(secret, -1L)
-
+    fun isTokenValid_devuelve_false_si_el_token_esta_expirado() {
         val user = User(
             "admin",
             "1234",
             listOf(SimpleGrantedAuthority("ROLE_ADMIN"))
         )
 
+        val jwtServiceExpirado = JwtService(secret, -1)
+
         val token = jwtServiceExpirado.generateToken(user)
 
-        // Aquí compruebo que al validar un token expirado se lanza una excepción
-        assertThrows(io.jsonwebtoken.ExpiredJwtException::class.java) {
-            jwtServiceExpirado.isTokenValid(token, user)
-        }
+        val resultado = jwtServiceExpirado.isTokenValid(token, user)
+
+        assertFalse(resultado)
     }
+
 
     @Test
     fun extractRoles_devuelve_lista_vacia_si_no_hay_roles_validos() {

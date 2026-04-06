@@ -88,12 +88,14 @@ open class MatriculaRestController {
         }
     }
 
-    @DeleteMapping("/{id_asignatura}/{id_alumno}")
+    @DeleteMapping("/{id_alumno}/{id_asignatura}")
     open fun delete(
         @PathVariable("id_alumno") idAlumno: Int,
         @PathVariable("id_asignatura") idAsignatura: Int
     ): ResponseEntity<Any> {
         return try {
+            // Aquí paso primero idAsignatura y después idAlumno,
+            // porque así lo espera la capa de negocio
             matriculaBusisness!!.remove(idAsignatura, idAlumno)
             ResponseEntity(HttpStatus.OK)
         } catch (e: BusinessException) {

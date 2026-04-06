@@ -25,7 +25,8 @@
     <!-- Aquí guardo las versiones generales para tenerlas controladas en un solo sitio -->
     <properties>
         <!-- Esta es la versión de Java que estoy usando -->
-        <java.version>21</java.version>
+        <!-- <java.version>21</java.version>  -->
+        <java.version>17</java.version>
 
         <!-- Esta es la versión de Kotlin del proyecto -->
         <kotlin.version>2.3.20</kotlin.version>
@@ -260,7 +261,9 @@
 
                 <configuration>
                     <!-- Aquí indico que Kotlin compile para Java 21 -->
-                    <jvmTarget>21</jvmTarget>
+                    <!-- <jvmTarget>21</jvmTarget> -->
+                    <!-- Aquí indico que Kotlin compile para Java 17 -->
+                    <jvmTarget>17</jvmTarget>
 
                     <!-- Este plugin ayuda a que Kotlin funcione correctamente con Spring -->
                     <compilerPlugins>
@@ -283,7 +286,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.14.1</version>
                 <configuration>
-                    <release>21</release>
+                    <!-- <release>21</release> -->
+                    <release>17</release>
                 </configuration>
             </plugin>
             <!-- Este plugin controla la compilación Java del proyecto -->

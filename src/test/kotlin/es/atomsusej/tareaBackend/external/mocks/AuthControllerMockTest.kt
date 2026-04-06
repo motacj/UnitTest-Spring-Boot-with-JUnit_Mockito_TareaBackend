@@ -1,5 +1,6 @@
 package es.atomsusej.tareaBackend.unit.controller
 
+import es.atomsusej.tareaBackend.security.AuthResponse
 import es.atomsusej.tareaBackend.security.AuthResquest
 import es.atomsusej.tareaBackend.security.JwtService
 import es.atomsusej.tareaBackend.web.AuthController
@@ -12,6 +13,7 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -61,7 +63,10 @@ class AuthControllerMockTest {
 
         val response = authController.login(request)
 
-        assertEquals("token-falso-123", response.token)
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val body = response.body as AuthResponse
+        assertEquals("token-falso-123", body.token)
 
         verify(authManager, times(1)).authenticate(
             UsernamePasswordAuthenticationToken("admin", "1234")
@@ -71,7 +76,7 @@ class AuthControllerMockTest {
     }
 
     @Test
-    fun login_incorrecto_lanza_excepcion_mock() {
+    fun login_incorrecto_devuelve_401_mock() {
         val request = AuthResquest(
             username = "admin",
             password = "mal"
@@ -85,9 +90,10 @@ class AuthControllerMockTest {
 
         val authController = AuthController(authManager, userDetailsService, jwtService)
 
-        assertThrows(BadCredentialsException::class.java) {
-            authController.login(request)
-        }
+        val response = authController.login(request)
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
+        assertEquals("Credenciales incorrectas", response.body)
 
         verify(authManager, times(1)).authenticate(
             UsernamePasswordAuthenticationToken("admin", "mal")
